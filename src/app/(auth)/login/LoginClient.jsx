@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import styles from './Auth.module.scss';
 import Loader from '@/components/loader/Loader';
+import Input from '@/components/input/Input';
 
 const LoginClient = () => {
   const [email, setEmail] = useState('');
@@ -29,7 +30,7 @@ const LoginClient = () => {
 
   return (
     <>
-      <Loader />
+      {isLoading && <Loader />}
       <section className={styles.page}>
         <div className={styles.container}>
           <h1 className={styles.logo}>
@@ -37,7 +38,28 @@ const LoginClient = () => {
           </h1>
           <form className={styles.form} onSubmit={loginUser}>
             {/* input */}
-            input
+            <Input
+              email
+              icon="letter"
+              id="email"
+              name="email"
+              label="이메일"
+              placeholder="아이디(이메일)"
+              className={styles.control}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              password
+              icon="lock"
+              id="password"
+              name="password"
+              label="비밀먼호"
+              placeholder="비밀번호"
+              className={styles.control}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <div className={styles.group}>
               {/* 자동 로그인, 비밀번호 수정 */}
               자동 로그인, 비밀번호 수정
