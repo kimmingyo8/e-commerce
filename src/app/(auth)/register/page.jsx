@@ -1,7 +1,8 @@
 import React from 'react';
+import RegisterClient from './RegisterClient';
 
 const RegisterPage = () => {
-  return <div>RegisterPage</div>;
+  return <RegisterClient />;
 };
 
 export default RegisterPage;
