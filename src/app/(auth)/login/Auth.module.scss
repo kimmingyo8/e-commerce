@@ -37,8 +37,14 @@
           vertical-align: -3px;
         }
       }
+
       .buttonGroup {
         margin: 2rem 0;
+      }
+
+      .validateError {
+        font-size: 14px;
+        color: var(--color-red);
       }
     }
   }
