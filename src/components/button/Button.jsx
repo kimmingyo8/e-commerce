@@ -4,6 +4,7 @@ import styles from './Button.module.scss';
 
 const Button = ({
   type = 'button',
+  disabled = false,
   secondary = false,
   bgColor,
   fgColor,
@@ -26,6 +27,7 @@ const Button = ({
       className={composeClasses}
       type={type}
       style={style}
+      disabled={disabled}
       {...restProps}
     />
   );

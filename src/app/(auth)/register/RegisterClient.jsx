@@ -128,13 +128,15 @@ const RegisterClient = () => {
 
             <div className={styles.buttonGroup}>
               {/* Button */}
-              <Button type="submit" width="100%">
+              <Button type="submit" width="100%" disabled={error?.length > 0}>
                 회원가입
               </Button>
               <Divider />
-              <Button width="100%" secondary>
-                <Link href={'/login'}>로그인</Link>
-              </Button>
+              <Link href={'/login'}>
+                <Button width="100%" secondary>
+                  로그인
+                </Button>
+              </Link>
             </div>
           </form>
         </div>

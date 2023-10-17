@@ -13,10 +13,17 @@ import Divider from '@/components/divider/Divider';
 import Button from '@/components/button/Button';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from 'firebase/auth';
+import { auth } from '@/firebase/firebase';
 
 const LoginClient = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isAutoLogin, setIsAutoLogin] = useState(false);
 
@@ -26,13 +33,56 @@ const LoginClient = () => {
     router.push('/');
   };
 
-  const loginUser = (e) => {
-    e.preventDefault();
-    toast.success('로그인 성공!');
-    setIsLoading(true);
+  const onChangeInputValidate = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'email') {
+      setEmail(value);
+      const validRegex =
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if (!validRegex.test(value)) {
+        setError('이메일 형식이 올바르지 않습니다.');
+      } else {
+        setError('');
+      }
+    }
+    if (name === 'password') {
+      setPassword(value);
+      if (value?.length < 8) {
+        setError('비밀번호는 8자리 이상 입력해주세요.');
+      } else {
+        setError('');
+      }
+    }
   };
 
-  const signInWithGoogle = () => {};
+  const loginUser = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setIsLoading(false);
+        toast.success('로그인에 성공하였습니다.');
+        redirectUser();
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        toast.error(err.message);
+      });
+  };
+
+  const signInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        toast.success('로그인에 성공하였습니다.');
+        redirectUser();
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
 
   return (
     <>
@@ -53,7 +103,7 @@ const LoginClient = () => {
               placeholder="아이디(이메일)"
               className={styles.control}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={onChangeInputValidate}
             />
             <Input
               password
@@ -64,8 +114,9 @@ const LoginClient = () => {
               placeholder="비밀번호"
               className={styles.control}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={onChangeInputValidate}
             />
+            {error && <p className={styles.validateError}>{error}</p>}
             <div className={styles.group}>
               {/* 자동 로그인, 비밀번호 수정 */}
               <AutoSignInCheckbox
@@ -92,13 +143,15 @@ const LoginClient = () => {
             </div>
             <div className={styles.buttonGroup}>
               {/* Button */}
-              <Button type="submit" width="100%">
+              <Button type="submit" width="100%" disabled={error?.length > 0}>
                 로그인
               </Button>
               <Divider />
-              <Button width="100%" secondary>
-                <Link href={'/register'}>회원가입</Link>
-              </Button>
+              <Link href={'/register'}>
+                <Button width="100%" secondary>
+                  회원가입
+                </Button>
+              </Link>
 
               <Divider />
               <div>
