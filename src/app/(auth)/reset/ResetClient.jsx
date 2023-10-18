@@ -8,6 +8,9 @@ import { useState } from 'react';
 import styles from './Reset.module.scss';
 import Button from '@/components/button/Button';
 import Link from 'next/link';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '@/firebase/firebase';
+import { toast } from 'react-toastify';
 
 const ResetClient = () => {
   const [email, setEmail] = useState('');
@@ -16,6 +19,16 @@ const ResetClient = () => {
   const resetPassword = (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        setIsLoading(false);
+        toast.success('비밀번호 업데이트를 위해 이메일을 체크해주세요!');
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        toast.error(err.message);
+      });
   };
 
   return (
