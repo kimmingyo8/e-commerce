@@ -7,12 +7,16 @@ import { usePathname, useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
 import InnerHeader from '../innerHeader/InnerHeader';
+import { useDispatch } from 'react-redux';
+import { REMOVE_ACTIVE_USER, SET_ACTIVE_USER } from '@/redux/slice/authSlice';
 
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
 
   const [displayName, setDisplayName] = useState('');
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -25,13 +29,19 @@ const Header = () => {
         } else {
           setDisplayName(user.displayName);
         }
-        // TODO: user 정보를 리덕스 스토어에 저장
+        dispatch(
+          SET_ACTIVE_USER({
+            email: user.email,
+            userName: user.displayName ? user.displayName : displayName,
+            userID: user.uid,
+          }),
+        );
       } else {
         setDisplayName('');
-        // TODO: user 정보를 리덕스 스토어에서 지움
+        dispatch(REMOVE_ACTIVE_USER());
       }
     });
-  }, []);
+  }, [dispatch, displayName]);
 
   // Header함수 렌더링 조건
   if (
