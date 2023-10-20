@@ -49,9 +49,11 @@ const filterSlice = createSlice({
         );
       }
       if (brand === 'All') {
-        tempProducts = products;
+        tempProducts = tempProducts;
       } else {
-        tempProducts = products.filter((product) => product.brand === brand);
+        tempProducts = tempProducts.filter(
+          (product) => product.brand === brand,
+        );
       }
 
       tempProducts = tempProducts.filter((product) => product.price <= price);

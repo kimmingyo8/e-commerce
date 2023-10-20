@@ -1,3 +1,5 @@
+'use client';
+
 import { FILTER_BY } from '@/redux/slice/filterSlice';
 import {
   selectMaxPrice,

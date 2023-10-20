@@ -89,9 +89,9 @@ const AddProductClient = () => {
       setProduct({ ...initialState });
       toast.success('상품을 저장했습니다.');
       router.push('/admin/all-products');
-    } catch (err) {
+    } catch (error) {
       setIsLoading(false);
-      toast.error(err.message);
+      toast.error(getErrorMessage(error));
     }
   };
 

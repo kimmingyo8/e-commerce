@@ -16,23 +16,21 @@ import ProductFilter from './ProductFilter/ProductFilter';
 const Product = () => {
   const { data, isLoading } = useFetchCollection('products');
 
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispath(
+    dispatch(
       STORE_PRODUCTS({
         products: data,
       }),
     );
 
-    dispath(
+    dispatch(
       GET_PRICE_RANGE({
         products: data,
       }),
     );
-  }, [data, dispath]);
-
-  const products = useSelector(selectProducts);
+  }, [data, dispatch]);
 
   return (
     <section className={styles.product}>
@@ -40,7 +38,7 @@ const Product = () => {
         {isLoading ? null : <ProductFilter />}
       </aside>
       <div className={styles.content}>
-        {isLoading ? <Loader /> : <ProductList />}
+        {isLoading ? <Loader basic /> : <ProductList />}
       </div>
     </section>
   );
